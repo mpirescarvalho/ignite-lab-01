@@ -11,8 +11,16 @@ interface CreateProductParams {
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async listAllProducts() {
+  listAllProducts() {
     return this.prisma.product.findMany();
+  }
+
+  getProductById(id: string) {
+    return this.prisma.product.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   async createProduct({ title }: CreateProductParams) {
@@ -28,7 +36,7 @@ export class ProductsService {
       throw new Error(`Product with slug ${slug} already exists`);
     }
 
-    return await this.prisma.product.create({
+    return this.prisma.product.create({
       data: {
         title,
         slug,
